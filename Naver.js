@@ -162,7 +162,7 @@ module.exports = (function () {
         };
         const payload = {
             "article": {
-                "cafeId": "30282513",
+                "cafeId": cafeId,
                 "contentJson": JSON.stringify(contentJson),
                 "from": "pc",
                 "menuId": 1,
