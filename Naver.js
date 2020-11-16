@@ -25,6 +25,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 */
+
 //from License.txt
 
 const lzstring = require('./lzstring');
@@ -56,7 +57,7 @@ module.exports = (function () {
             const byte = cipher.doFinal(bytes);
             const hex = new java.math.BigInteger(1, byte);
             const encpw = hex.toString(16);
-            const uuid = java.util.UUID.randomUUID().toString();
+           	const uuid = java.util.UUID.randomUUID().toString();
             const data = '{"a":"'+uuid+'-4","b":"1.3.4","d":[{"i":"id","b":{"a":["0,'+id+'"]},"d":"'+id+'","e":false,"f":false},{"i":"pw","e":true,"f":false}],"h":"1f","i":{"a":"Mozilla/5.0"}}';
             const encData = lzstring.compressToEncodedURIComponent(data);
             const bvsd = '{"uuid":"' + uuid + '","encData":"' + encData + '"}';
@@ -126,7 +127,73 @@ module.exports = (function () {
             }).data('cafeId', cafeId)
             .data('articleId', articleId)
             .data('requestedFrom', 'A')
-            .ignoreContentType(true);
+            .ignoreContentType(true)
+            .ignoreHttpErrors(true);
+        return con.execute().body();
+    }
+    Naver.prototype.writeArticle = function (cafeId, subject, content) {
+        const contentJson = {
+            "document": {
+                "version": "2.5.1",
+                "theme": "default",
+                "language": "ko-KR",
+                "components": [
+                    {
+                        "id": "SE-b7de985a-54e8-4842-a615-01bd109f06c8",
+                        "layout": "default",
+                        "value": [
+                            {
+                                "id": "SE-c2d1968d-5658-4f53-b8f5-aaeadab3c2f0",
+                                "nodes": [
+                                    {
+                                        "id": "SE-dcacbf9d-62fc-4b4e-be89-723dc08ef4ac",
+                                        "value": content,
+                                        "@ctype": "textNode"
+                                    }
+                                ],
+                                "@ctype": "paragraph"
+                            }
+                        ],
+                        "@ctype": "text"
+                    }
+                ]
+            },
+            "documentId": ""
+        };
+        const payload = {
+            "article": {
+                "cafeId": "30282513",
+                "contentJson": JSON.stringify(contentJson),
+                "from": "pc",
+                "menuId": 1,
+                "subject": subject,
+                "tagList": [],
+                "editorVersion": 4,
+                "parentId": 0,
+                "open": false,
+                "naverOpen": true,
+                "externalOpen": true,
+                "enableComment": true,
+                "enableScrap": true,
+                "enableCopy": true,
+                "useAutoSource": false,
+                "cclTypes": [],
+                "useCcl": false
+            }
+        };
+        const con = org.jsoup.Jsoup.connect('https://apis.naver.com/cafe-web/cafe-editor-api/v1.0/cafes/' + cafeId + '/menus/1/articles')
+            .userAgent('Mozilla/5.0')
+            .header('Content-Type', 'application/json;charset=UTF-8')
+            .header('X-Cafe-Product', 'pc')
+            .cookies({
+                nid_inf: this.cookies.nid_inf,
+                NID_AUT: this.cookies.NID_AUT,
+                NID_JKL: this.cookies.NID_JKL,
+                NID_SES: this.cookies.NID_SES
+            }).requestBody(JSON.stringify(payload))
+            .ignoreContentType(true)
+            .ignoreHttpErrors(true)
+            .method(org.jsoup.Connection.Method.POST);
         return con.execute().body();
     }
     return Naver;
