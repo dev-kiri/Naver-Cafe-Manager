@@ -28,7 +28,7 @@ SOFTWARE.
 
 const LZString = require('./lzstring');
 
-module.exports = function () {
+module.exports = (function () {
 
     /**
      * @constructor
@@ -221,4 +221,6 @@ module.exports = function () {
             .execute()
             .body();
     }
-}
+
+    return Naver;
+})();
