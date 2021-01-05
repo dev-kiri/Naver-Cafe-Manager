@@ -1,5 +1,5 @@
 ## Naver-Cafe-Manager
-Either writing comments or deleting aricles is avaliable. For Rhino js
+Either writing comments or deleting articles is avaliable. For Rhino js
 
 Tested on KakaoTalk Bot.
 
