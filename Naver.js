@@ -60,7 +60,7 @@ module.exports = (function () {
             const uuid = java.util.UUID.randomUUID().toString();
             const data = '{"a":"'+uuid+'-4","b":"1.3.4","d":[{"i":"id","b":{"a":["0,'+id+'"]},"d":"'+id+'","e":false,"f":false},{"i":"pw","e":true,"f":false}],"h":"1f","i":{"a":"Mozilla/5.0"}}';
             const encData = lzstring.compressToEncodedURIComponent(data);
-            const bvsd = '{"uuid":"' + uuid + '","encData":"' + encData + '"}';
+            const bvsd = '{"uuid":"' + uuid + '","encData":"' + encData + '"}'; 
             const con = org.jsoup.Jsoup.connect('https://nid.naver.com/nidlogin.login')
                 .userAgent('Mozilla/5.0')
                 .method(org.jsoup.Connection.Method.POST)
