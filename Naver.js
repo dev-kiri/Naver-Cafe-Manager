@@ -186,6 +186,9 @@ module.exports = (function () {
      * @returns result JSON
      */
     Naver.prototype.writeComments = function (cafeId, articleId, content) {
+        
+        if (!this.cookies) this.login(this.username, this.password);
+        
         return org.jsoup.Jsoup.connect('https://apis.naver.com/cafe-web/cafe-mobile/CommentPost.json')
             .userAgent(this.userAgent)
             .method(org.jsoup.Connection.Method.POST)
@@ -208,6 +211,9 @@ module.exports = (function () {
      * @returns result JSON
      */
     Naver.prototype.deleteArticle = function (cafeId, articleId) {
+        
+        if (!this.cookies) this.login(this.username, this.password);
+        
         return org.jsoup.Jsoup.connect('https://apis.naver.com/cafe-web/cafe2/ArticleDelete.json')
             .userAgent(this.userAgent)
             .method(org.jsoup.Connection.Method.POST)
