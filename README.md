@@ -4,27 +4,29 @@ Tested on KakaoTalk Bot.
 
 ## Example
 ```js
-const Naver = require('Naver');
+const naver = require('Naver');
+const Naver = new naver;
 
-new Naver('YOUR NAVERID', 'YOUR PASSWORD').login(); // simple login
-new Naver('YOUR NAVERID', 'YOUR PASSWORD').login(true); // login continue
+Naver.login('YOUR NAVERID', 'YOUR PASSWORD'); // simple login
+Naver.login('YOUR NAVERID', 'YOUR PASSWORD', true); // login continue
+
+Naver.logout(); // logout from saved sessions
 ```
 By logging in Naver, you can acquire cookies.
 Writing comments is available.
 ```js
-const Naver = require('Naver');
+const naver = require('Naver');
+const Naver = new naver;
 
-const naver = new Naver('YOUR NAVERID', 'YOUR PASSWORD').login(true);
-
-naver.writeComments('cafeId', 'articleId', 'THIS IS CONTENT'); // write comments
+Naver.login('YOUR NAVERID', 'YOUR PASSWORD');
+Naver.writeComments('cafeId', 'articleId', 'THIS IS CONTENT'); // write comments
 ```
 or deleting articles:
 ```js
-const Naver = require('Naver');
+const naver = require('Naver');
+const Naver = new naver;
 
-const naver = new Naver('YOUR NAVERID', 'YOUR PASSWORD').login(true);
-
-naver.deleteArticle('cafeId', 'articleId');
+Naver.deleteArticle('cafeId', 'articleId');
 ```
 Note: It can stop working anytime.
 
