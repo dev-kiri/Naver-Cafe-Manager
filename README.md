@@ -1,6 +1,9 @@
 ## Naver-Cafe-Manager
-Either writing comments or deleting aricles is avaliable. -For Rhino js-
+Either writing comments or deleting aricles is avaliable. For Rhino js
+
 Tested on KakaoTalk Bot.
+
+Last Update: January 05 2021
 
 ## Example
 ```js
