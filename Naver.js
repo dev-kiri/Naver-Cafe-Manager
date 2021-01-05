@@ -44,6 +44,8 @@ module.exports = (function () {
 
     /**
      *
+     * @param {String} username
+     * @param {String} password
      * @param {Boolean} logincontinue
      * @returns this 
      */
