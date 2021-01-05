@@ -28,15 +28,15 @@ SOFTWARE.
 
 const LZString = require('./lzstring');
 
-module.exports = function (username, password) {
+module.exports = (function () {
 
     /**
      * @constructor
      * @author Kiri
      */
     function Naver() {
-        this.username = username || null;
-        this.password = password || null;
+        this.username = null;
+        this.password = null;
         this.uuid = null;
         this.cookies = {};
         this.userAgent = 'Mozilla/5.0';
@@ -47,9 +47,10 @@ module.exports = function (username, password) {
      * @param {Boolean} logincontinue
      * @returns this 
      */
-    Naver.prototype.login = function (logincontinue) {
+    Naver.prototype.login = function (username, password, logincontinue) {
 
-        if (!this.username || !this.password) throw new ReferenceError('No username or password.'); 
+        this.username = username;
+        this.password = password;
 
         function getLenChar(value) {
             return String.fromCharCode(value.length);
@@ -219,4 +220,6 @@ module.exports = function (username, password) {
             .execute()
             .body();
     }
-}
+    
+    return Naver;
+})();
