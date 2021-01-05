@@ -28,30 +28,28 @@ SOFTWARE.
 
 const LZString = require('./lzstring');
 
-module.exports = (function () {
+module.exports = function (username, password) {
 
     /**
      * @constructor
      * @author Kiri
      */
     function Naver() {
-        this.username = null;
-        this.password = null;
+        this.username = username || null;
+        this.password = password || null;
         this.uuid = null;
         this.cookies = {};
-        this.ua = 'Mozilla/5.0';
+        this.userAgent = 'Mozilla/5.0';
     }
 
     /**
-     * 
-     * @param {String} username 
-     * @param {String} password 
+     *
      * @param {Boolean} logincontinue
      * @returns this 
      */
-    Naver.prototype.login = function (username, password, logincontinue) {
-        this.username = username;
-        this.password = password;
+    Naver.prototype.login = function (logincontinue) {
+
+        if (!this.username || !this.password) throw new ReferenceError('No username or password.'); 
 
         function getLenChar(value) {
             return String.fromCharCode(value.length);
@@ -62,7 +60,7 @@ module.exports = (function () {
             const keyFactory = java.security.KeyFactory.getInstance('RSA'),
                   nvalue = new java.math.BigInteger(n, 16),
                   evalue = new java.math.BigInteger(e, 16),
-                  pks = new javax.security.spec.RSAPublicKeySpec(nvalue, evalue),
+                  pks = new java.security.spec.RSAPublicKeySpec(nvalue, evalue),
                   key = keyFactory.generatePublic(pks),
                   cipher = javax.crypto.Cipher.getInstance('RSA/None/PKCS1Padding');
 
@@ -123,7 +121,7 @@ module.exports = (function () {
             const message = getLenChar(sessionkey) + sessionkey +
                             getLenChar(username) + username +
                             getLenChar(password) + password;
-            const encpw = encrypt(message, modulusLength, exponent),
+            const encpw = encrypt(modulusLength, exponent, message),
                   bvsd = bvsdformat(this.uuid, this.username, this.password, this.userAgent),
                   encData = LZString.compressToEncodedURIComponent(JSON.stringify(bvsd)),
                   final_bvsd = {
@@ -132,27 +130,27 @@ module.exports = (function () {
                   };
             
             const response = org.jsoup.Jsoup.connect('https://nid.naver.com/nidlogin.login')
+                .userAgent(this.userAgent)
                 .method(org.jsoup.Connection.Method.POST)
                 .header('Content-Type', 'application/x-www-form-urlencoded')
-                .data({
-                    encpw: encpw,
-                    enctp: 1,
-                    svctype: 1,
-                    smart_LEVEL: -1,
-                    bvsd: JSON.stringify(final_bvsd),
-                    encnm: keyname,
-                    locale: 'ko_KR',
-                    url: 'https://naver.com',
-                    nvlong: logincontinue ? 'on' : 'off'
-                }).execute();
+                .data('encpw', encpw)
+                .data('enctp', 1)
+                .data('svctype', 1)
+                .data('smart_LEVEL', -1)
+                .data('bvsd', JSON.stringify(final_bvsd))
+                .data('encnm', keyname)
+                .data('locale', 'ko_KR')
+                .data('url', 'https://naver.com')
+                .data('nvlong', logincontinue ? 'on' : 'off')
+                .execute();
 
             if (!response.cookie('NID_AUT')) throw new Error('Login Failed! Check your username or password.');
 
             Object.assign(this.cookies, {
-                nid_inf: con.cookie('nid_inf'),
-                NID_AUT: con.cookie('NID_AUT'),
-                NID_JKL: con.cookie('NID_JKL'),
-                NID_SES: con.cookie('NID_SES')
+                nid_inf: response.cookie('nid_inf'),
+                NID_AUT: response.cookie('NID_AUT'),
+                NID_JKL: response.cookie('NID_JKL'),
+                NID_SES: response.cookie('NID_SES')
             });
 
         }).bind(this)();
@@ -186,10 +184,10 @@ module.exports = (function () {
      */
     Naver.prototype.writeComments = function (cafeId, articleId, content) {
         return org.jsoup.Jsoup.connect('https://apis.naver.com/cafe-web/cafe-mobile/CommentPost.json')
+            .userAgent(this.userAgent)
             .method(org.jsoup.Connection.Method.POST)
             .header('Content-Type', 'application/x-www-form-urlencoded')
             .header('X-Cafe-Product', 'pc')
-            .cookies(this.cookies)
             .data({
                 content: content,
                 cafeId: cafeId,
@@ -208,10 +206,10 @@ module.exports = (function () {
      */
     Naver.prototype.deleteArticle = function (cafeId, articleId) {
         return org.jsoup.Jsoup.connect('https://apis.naver.com/cafe-web/cafe2/ArticleDelete.json')
+            .userAgent(this.userAgent)
             .method(org.jsoup.Connection.Method.POST)
             .header('Content-Type', 'application/x-www-form-urlencoded')
             .header('X-Cafe-Product', 'pc')
-            .cookies(this.cookies)
             .data({
                 content: content,
                 cafeId: cafeId,
@@ -221,6 +219,4 @@ module.exports = (function () {
             .execute()
             .body();
     }
-
-    return Naver;
-})();
+}
