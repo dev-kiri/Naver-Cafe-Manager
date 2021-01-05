@@ -168,7 +168,7 @@ module.exports = (function () {
      */
     Naver.prototype.logout = function () {
 
-        if (this.cookies) throw new Error('You have no session. Please login first.');
+        if (!this.cookies) throw new Error('You have no session. Please login first.');
 
         org.jsoup.Jsoup.connect('http://nid.naver.com/nidlogin.logout')
             .cookies(this.cookies)
