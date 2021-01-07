@@ -22,9 +22,9 @@ const naver = require('Naver');
 const Naver = new naver;
 
 Naver.login('네이버 아이디', '비밀번호');
-Naver.writeComments('카페 아이디', '게시글 번호', '이것은 내용이다'); // write comments
+Naver.writeComments('카페 아이디', '게시글 번호', '이것은 내용이다.'); // 댓글을 작성한다.
 ```
-또는 게시글을 삭제하거나:
+또는 게시글을 삭제한다:
 ```js
 const naver = require('Naver');
 const Naver = new naver;
